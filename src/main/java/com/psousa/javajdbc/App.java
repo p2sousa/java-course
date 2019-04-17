@@ -1,98 +1,38 @@
 package com.psousa.javajdbc;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Scanner;
 
 public class App {
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        Connection connection = connectDatabase();
+        System.out.println("--------Menu------------");
+        System.out.println("1 - List movies");
+        System.out.println("2 - Create a movie");
+        System.out.println("3 - Update a movie");
+        System.out.println("4 - Delete a movie");
+        System.out.println("--------Menu------------");
 
-        createTableMovies(connection);
-        dropTableMovies(connection);
-    }
+        int choice = scanner.nextInt();
 
-    private static Connection connectDatabase() {
-        Dotenv dotenv = Dotenv.configure()
-            .directory(System.getProperty("user.dir"))
-            .ignoreIfMalformed()
-            .ignoreIfMissing()
-            .load();
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("Loaded");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Failed to Load");
-            e.printStackTrace();
+        switch (choice) {
+            case 1:
+                System.out.println("CASE 1");
+                break;
+            case 2:
+                System.out.println("CASE 2");
+                break;
+            case 3:
+                System.out.println("CASE 3");
+                break;
+            case 4:
+                System.out.println("CASE 4");
+                break;
+            default:
+                System.out.println("Invalid Option!");
         }
 
-        Connection connection = null;
-
-        String urlConnector = "jdbc:mysql://";
-
-        urlConnector += dotenv.get("DB_HOST");
-        urlConnector += ":" + dotenv.get("DB_PORT");
-        urlConnector += "/" + dotenv.get("DB_DATABASE");
-        urlConnector += "?useSSL=false";
-
-        try {
-            connection = DriverManager.getConnection(
-                    urlConnector,
-                    dotenv.get("DB_USER"),
-                    dotenv.get("DB_PASSWORD")
-            );
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return connection;
-    }
-
-    private static Boolean createTableMovies(Connection connection) {
-        Statement statement = null;
-
-        try {
-            statement = connection.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        String sql = "CREATE TABLE IF NOT EXISTS movies (id INTEGER NOT NULL AUTO_INCREMENT, " +
-                "name VARCHAR(255) NOT NULL, PRIMARY KEY (id))";
-
-        try {
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
-    private static Boolean dropTableMovies(Connection connection) {
-        Statement statement = null;
-
-        try {
-            statement = connection.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        String sql = "DROP TABLE movies";
-
-        try {
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return true;
     }
 
 }
