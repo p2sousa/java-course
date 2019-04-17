@@ -5,11 +5,19 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class App {
 
     public static void main(String[] args) {
-        
+
+        Connection connection = connectDatabase();
+
+        createTableMovies(connection);
+        dropTableMovies(connection);
+    }
+
+    private static Connection connectDatabase() {
         Dotenv dotenv = Dotenv.configure()
             .directory(System.getProperty("user.dir"))
             .ignoreIfMalformed()
@@ -35,19 +43,56 @@ public class App {
 
         try {
             connection = DriverManager.getConnection(
-                urlConnector,
-                dotenv.get("DB_USER"),
-                dotenv.get("DB_PASSWORD")
+                    urlConnector,
+                    dotenv.get("DB_USER"),
+                    dotenv.get("DB_PASSWORD")
             );
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if (connection != null) {
-            System.out.println("Connected");
-        } else {
-            System.out.println("Connected Failed");
+        return connection;
+    }
+
+    private static Boolean createTableMovies(Connection connection) {
+        Statement statement = null;
+
+        try {
+            statement = connection.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        String sql = "CREATE TABLE IF NOT EXISTS movies (id INTEGER NOT NULL AUTO_INCREMENT, " +
+                "name VARCHAR(255) NOT NULL, PRIMARY KEY (id))";
+
+        try {
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    private static Boolean dropTableMovies(Connection connection) {
+        Statement statement = null;
+
+        try {
+            statement = connection.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String sql = "DROP TABLE movies";
+
+        try {
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
 }
