@@ -16,6 +16,27 @@ public class MovieDAO {
         connection = new ConnectionFactory().getConnection();
     }
 
+
+    public Movie findById(Integer id) throws SQLException {
+        String query = "SELECT * FROM movies WHERE id = ?";
+
+        statement = connection.prepareStatement(query);
+        statement.setInt(1, id);
+
+        ResultSet response = statement.executeQuery();
+
+        Movie movie = null;
+
+        while (response.next()) {
+            movie = new Movie(
+                response.getInt("id"),
+                response.getString("name")
+            );
+        }
+
+        return movie;
+    }
+
     public List<Movie> findAll() throws SQLException {
         String query = "SELECT * FROM movies";
         List<Movie> movies = new ArrayList<Movie>();
@@ -48,7 +69,7 @@ public class MovieDAO {
         String query = "UPDATE movies SET name = ? WHERE id = ?";
 
         statement = connection.prepareStatement(query);
-        statement.setString(1, movie.getName());
+        statement.setString(1, movieData.getName());
         statement.setInt(2, movie.getId());
         statement.execute();
     }

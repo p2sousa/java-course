@@ -1,12 +1,16 @@
 package com.psousa.javajdbc;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Scanner scanner = new Scanner(System.in);
+
+        MovieDAO daoMovie = new MovieDAO();
 
         System.out.println("--------Menu------------");
         System.out.println("1 - List movies");
@@ -19,17 +23,46 @@ public class App {
 
         switch (choice) {
             case 1:
-                System.out.println("CASE 1");
-                Connection connection = new ConnectionFactory().getConnection();
+                ArrayList<Movie> data = (ArrayList<Movie>) daoMovie.findAll();
+                for (Movie movie : data) {
+                    System.out.println("Id: " + movie.getId());
+                    System.out.println("Name: " + movie.getName());
+                }
                 break;
             case 2:
-                System.out.println("CASE 2");
+                System.out.println("Enter name: ");
+                String name = scanner.next();
+                daoMovie.insert(new Movie(name));
+
                 break;
             case 3:
-                System.out.println("CASE 3");
+                System.out.println("Enter Movie ID: ");
+                Integer id = scanner.nextInt();
+
+                Movie movieExist = daoMovie.findById(id);
+
+                if (movieExist == null) {
+                    System.out.println("Movie not exist");
+                    break;
+                }
+
+                System.out.println("Enter new Movie name: ");
+                String movieName = scanner.next();
+                Movie newMovie = new Movie(movieExist.getId(), movieName);
+                daoMovie.update(movieExist, newMovie);
                 break;
             case 4:
-                System.out.println("CASE 4");
+                System.out.println("Enter Movie ID: ");
+                Integer movieId = scanner.nextInt();
+
+                Movie movieToDelete = daoMovie.findById(movieId);
+
+                if (movieToDelete == null) {
+                    System.out.println("Movie not exist");
+                    break;
+                }
+
+                daoMovie.delete(movieToDelete);
                 break;
             default:
                 System.out.println("Invalid Option!");
