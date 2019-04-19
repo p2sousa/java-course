@@ -6,6 +6,7 @@ import java.awt.*;
 public class Hello {
 
     private JFrame frame;
+    private JLabel lblHello;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -27,7 +28,13 @@ public class Hello {
 
     private void initialize() {
         frame = new JFrame();
+        lblHello = new JLabel("",SwingConstants.CENTER);
+        lblHello.setText("Hello World From Java Swing");
+
         frame.setBounds(100, 100, 450, 300);
+
+        frame.add(lblHello);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setTitle("First Frame");
     }
 }
