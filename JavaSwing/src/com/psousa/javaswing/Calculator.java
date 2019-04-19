@@ -29,7 +29,7 @@ public class Calculator {
         mainFrame.setLayout(new GridLayout(4, 0));
 
         btnCalc = new JButton("Calculate");
-        btnCalc.setActionCommand("Action");
+        btnCalc.setActionCommand("Calc");
 
         txtNumber1 = new JTextField(30);
         txtNumber2 = new JTextField(30);
@@ -56,8 +56,37 @@ public class Calculator {
             String command = e.getActionCommand();
 
             switch (command) {
-                case "Action":
-                    JOptionPane.showMessageDialog(null, txtNumber1.getText());
+                case "Calc":
+                    if (txtNumber1.getText() == null ||
+                        txtNumber2.getText() == null ||
+                        operations.getSelectedItem() == null
+                    ) {
+                        System.out.println("OPTIONS NULL");
+                        break;
+                    }
+
+                    Integer result = 0;
+                    Integer number1 = Integer.parseInt(txtNumber1.getText());
+                    Integer number2 = Integer.parseInt(txtNumber2.getText());
+                    String operation = operations.getSelectedItem().toString();
+
+                    if (operation == "+") {
+                        result = number1 + number2;
+                    } else if (operation == "-") {
+                        result = number1 - number2;
+                    } else if (operation == "*") {
+                        result = number1 * number2;
+                    } else if (operation == "/") {
+                        result = number1 / number2;
+                    }
+
+                    String message = txtNumber1.getText();
+                    message += " " + operations.getSelectedItem().toString();
+                    message += " " + txtNumber2.getText();
+                    message += " = " + result.toString();
+
+                    JOptionPane.showMessageDialog(null, message);
+
                     break;
                 default:
                     System.out.println("Invalid Action");
