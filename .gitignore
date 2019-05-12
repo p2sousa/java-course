@@ -4,3 +4,4 @@
 *target/
 *out/
 *.gradle/
+JavaMongo/build/
